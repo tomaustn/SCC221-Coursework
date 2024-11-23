@@ -50,7 +50,3 @@ def plotStockPrice(parsedData):
 
     fig.show()
 
-
-result = getMarketPrice()
-
-plotStockPrice(result)

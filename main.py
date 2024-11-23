@@ -1,5 +1,6 @@
 from databaseConnection import db
-import databaseUtils 
+import databaseUtils
+import graphingUtils
 import yfinance as yf
 
 cursor = db.cursor()
@@ -12,7 +13,14 @@ params = {
     "mostVolatile": ("2023-11-24",)
 }
 
-
+## Output all queries
 for queryName, query in databaseUtils.queries.items():
     result = databaseUtils.runQuery(query, params.get(queryName))
     print(f"Results for {queryName}:\n{result}\n\n")
+
+
+## Graphing 
+# graphingUtils.plotStockPrice(graphingUtils.getMarketPrice()) # Plot all stock price
+graphingUtils.plotStockPrice(graphingUtils.getStockPrices("AAPL")) # Plot Apple stock price
+
+
