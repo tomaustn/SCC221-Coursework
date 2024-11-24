@@ -8,7 +8,7 @@ def initalizeDatabase() -> bool:
     cursor = db.cursor()
 
     try:
-        cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase;")
+        #cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase;")
         cursor.execute("USE StockDatabase;")
 
         cursor.execute("""

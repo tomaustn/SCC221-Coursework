@@ -23,10 +23,14 @@ def getConnection():
             host =  "",
             user = "",
             password = "",
-            database = "SCC221"
         )
         return db
     
     except mysql.connector.Error as e:
         print(e)
         return None
+    
+def createDatabase(connection):
+    cursor = connection.cursor()
+    cursor.execute(f"CREATE DATABASE IF NOT EXISTS StockDatabase")
+    cursor.close()
