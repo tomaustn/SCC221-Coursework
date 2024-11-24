@@ -1,4 +1,7 @@
-from databaseConnection import db
+import databaseConnection 
+
+db = databaseConnection.getConnection()
+cursor = db.cursor()
 
 def initalizeDatabase() -> bool:
 

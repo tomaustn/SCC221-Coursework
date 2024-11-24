@@ -1,7 +1,8 @@
-from databaseConnection import db
+import databaseConnection
 import databaseUtils
 import graphingUtils
 
+db = databaseConnection.getConnection()
 cursor = db.cursor()
 
 params = {
