@@ -1,6 +1,7 @@
-from databaseConnection import db
+import databaseConnection
 from datetime import datetime
 
+db = databaseConnection.getConnection()
 cursor = db.cursor()
 
 def insertIndustry(industryName: str) -> int:
