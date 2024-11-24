@@ -1,5 +1,4 @@
 from databaseConnection import db
-import yfinance as yf
 from datetime import datetime
 
 cursor = db.cursor()
@@ -17,13 +16,18 @@ def insertTicker(tickerName: str, industryId: int) -> int:
     return cursor.fetchone()[0]
 
 def insertDate(date: str):
-    dt = datetime.strptime(date, '%Y-%m-%d')
+    dt = datetime.strptime(date, '%Y-%m-%d %H:%M:%S%z')
+    formattedDate = dt.strftime('%Y-%m-%d')
     year, month, day = dt.year, dt.month, dt.day
-    cursor.execute("INSERT IGNORE INTO DateDimension (Date, Year, Month, Day) VALUES (%s, %s, %s, %s)",
-                   (date, year, month, day))
+    cursor.execute(
+        "INSERT IGNORE INTO DateDimension (Date, Year, Month, Day) VALUES (%s, %s, %s, %s)",
+        (formattedDate, year, month, day)
+    )
     db.commit()
-    cursor.execute("SELECT DateID FROM DateDimension WHERE Date = %s", (date,))
+
+    cursor.execute("SELECT DateID FROM DateDimension WHERE Date = %s", (formattedDate,))
     return cursor.fetchone()[0]
+
 
 def insertStockPrice(tickerId: int, dateId: int, date: str, openPrice: float, high: float, low: float, close: float):
     cursor.execute("""
@@ -32,28 +36,44 @@ def insertStockPrice(tickerId: int, dateId: int, date: str, openPrice: float, hi
     """, (tickerId, dateId, date, float(openPrice), float(high), float(low), float(close)))
     db.commit()
 
-def populateDatabase(tickerSymbols: list, industryName: str) -> None:
-    industryId = insertIndustry(industryName)
+def assertIndustry(tickerName: str) -> str:
+    if tickerName in ["GS", "JPM", "KKR", "MS", "BLK", "BX"]:
+        return "Finance"
+    elif tickerName in ["AAPL", "AMZN", "CRWD", "GOOGL", "MSFT", "PLTR", "TTD"]:
+        return "Tech"
+    else:
+        return "Other"
 
-    for symbol in tickerSymbols:
-        ticker = yf.Ticker(symbol)
-        history = ticker.history(period="1y")
+def populateDatabase(csvFilePath: str) -> None:
+    with open(csvFilePath, 'r') as file:
+        headers = file.readline().strip().split(',')
+        columnIndices = {header:i for i, header in enumerate(headers)}
 
-        tickerId = insertTicker(symbol, industryId)
-        
-        for date, row in history.iterrows():
-            dateStr = date.strftime('%Y-%m-%d')
+        for line in file:
+            values = line.strip().split(',')
+            tickerName = values[columnIndices['Symbol']]
+            dateStr = values[columnIndices['Date']]
+            openPrice = float(values[columnIndices['Open']])
+            high = float(values[columnIndices['High']])
+            low = float(values[columnIndices['Low']])
+            close = float(values[columnIndices['Close']])
+
+            industryName = assertIndustry(tickerName)
+            industryId = insertIndustry(industryName)
+            tickerId = insertTicker(tickerName, industryId)
             dateId = insertDate(dateStr)
+
             insertStockPrice(
                 tickerId=tickerId,
                 dateId=dateId,
                 date=dateStr,
-                openPrice=row["Open"],
-                high=row["High"],
-                low=row["Low"],
-                close=row["Close"]
+                openPrice=openPrice,
+                high=high,
+                low=low,
+                close=close
             )
-        print(f"Data for {symbol} has been added to the database.")
+
+        print(f"Data from {csvFilePath} has been added to the database.")
 
 queries = {
     "allDailyStockPrices": """
@@ -120,3 +140,6 @@ def closeConnection() -> bool:
 def insertTickerData(tickerList: list, sectorName: str) -> None:
     populateDatabase(tickerList, sectorName)
     return None
+
+def getAllStocks() -> list:
+    return [x[0] for x in runQuery(queries["allDailyStockPrices"], ("2023-11-24",))]

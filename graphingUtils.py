@@ -11,10 +11,8 @@ def getStockPrices(ticker):
     return parseData(databaseUtils.runQuery(databaseUtils.queries["allTickerPrice"], (ticker,)))
 
 def getMarketPrice():
-    tickers = ["AAPL", "AMZN", "BLK", "BX", "CRWD", "GOOGL", "GS", "JPM", "KKR", "MS", "MSFT", "PLTR", "TTD"]
-    allData = []
-    
-    for ticker in tickers:
+    allData = []    
+    for ticker in databaseUtils.getAllStocks():
         allData.extend(getStockPrices(ticker)) 
     
     return allData
