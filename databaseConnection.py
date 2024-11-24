@@ -8,7 +8,12 @@ try:
         database = "bixbkbxphekhbztfxa9l",
         port = 3306
     )
+    
+    cursor = db.cursor()
+    cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase;")
+    db.commit()
+
+
 except mysql.connector.Error as e:
     print(e)
-
 
