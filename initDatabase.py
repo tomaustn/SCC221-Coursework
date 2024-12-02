@@ -4,9 +4,6 @@ db = databaseConnection.getConnection()
 cursor = db.cursor()
 
 def initalizeDatabase() -> bool:
-
-    cursor = db.cursor()
-
     try:
         cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase;")
         cursor.execute("USE StockDatabase;")
@@ -48,7 +45,7 @@ def initalizeDatabase() -> bool:
             Low DECIMAL(10, 2) NOT NULL,
             Close DECIMAL(10, 2) NOT NULL,
             FOREIGN KEY (TickerID) REFERENCES Ticker(TickerID) ON DELETE RESTRICT,
-            FOREIGN KEY (DateID) REFERENCES DateDimension(DateID) ON DELETE RESTRICT
+            FOREIGN KEY (DateID) REFERENCES DateDimension(DateID) ON DELETE RESTRICT,
             UNIQUE (TickerID, Date)
         );
         """)
