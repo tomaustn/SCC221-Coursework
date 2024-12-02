@@ -3,7 +3,6 @@ import databaseUtils
 import graphingUtils
 
 db = databaseConnection.getConnection()
-databaseConnection.createDatabase(db)
 cursor = db.cursor()
 
 params = {

@@ -15,10 +15,10 @@ def getConnection():
         print(e)
         return None
     
-def createDatabase(connection):
-    try:
-        cursor = connection.cursor()
-        cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase")
-        cursor.close()
-    except mysql.connector.Error as e:
-        print(e)
+# def createDatabase(connection):
+#     try:
+#         cursor = connection.cursor()
+#         cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase")
+#         cursor.close()
+#     except mysql.connector.Error as e:
+#         print(e)
