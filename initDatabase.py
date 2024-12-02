@@ -4,12 +4,14 @@ db = databaseConnection.getConnection()
 cursor = db.cursor()
 
 def initalizeDatabase() -> bool:
+
     try:
+        
         cursor.execute("CREATE DATABASE IF NOT EXISTS StockDatabase;")
         cursor.execute("USE StockDatabase;")
 
         cursor.execute("""
-        CREATE TABLE Industry (
+        CREATE TABLE IF NOT EXISTS Industry (
             IndustryID INT AUTO_INCREMENT PRIMARY KEY,
             IndustryName VARCHAR(255) NOT NULL UNIQUE
         );

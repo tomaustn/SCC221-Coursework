@@ -21,17 +21,14 @@ tech = ["AAPL", "AMZN", "CRWD", "GOOGL", "MSFT", "PLTR", "TTD"]
 
 databaseUtils.populateDatabase("stockData.csv")
 
+## Output all queries
+for queryName, query in databaseUtils.queries.items():
+    result = databaseUtils.runQuery(query, params.get(queryName))
+    print(f"Results for {queryName}:\n{result}\n\n")
 
 
-
-# ## Output all queries
-# for queryName, query in databaseUtils.queries.items():
-#     result = databaseUtils.runQuery(query, params.get(queryName))
-#     print(f"Results for {queryName}:\n{result}\n\n")
-
-
-# ## Graphing 
-# # graphingUtils.plotStockPrice(graphingUtils.getMarketPrice()) # Plot all stock price
-# graphingUtils.plotStockPrice(graphingUtils.getStockPrices("AAPL")) # Plot Apple stock price
+## Graphing 
+graphingUtils.plotStockPrice(graphingUtils.getMarketPrice()) # Plot all stock price
+graphingUtils.plotStockPrice(graphingUtils.getStockPrices("AAPL"))
 
 

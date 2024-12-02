@@ -46,6 +46,8 @@ def assertIndustry(tickerName: str) -> str:
         return "Other"
 
 def populateDatabase(csvFilePath: str) -> None:
+    # use database
+    cursor.execute("USE StockDatabase;")
     with open(csvFilePath, 'r') as file:
         headers = file.readline().strip().split(',')
         columnIndices = {header:i for i, header in enumerate(headers)}
