@@ -1,9 +1,12 @@
 import databaseConnection
 import databaseUtils
 import graphingUtils
+import initDatabase
 
 db = databaseConnection.getConnection()
 cursor = db.cursor()
+
+initDatabase.initalizeDatabase()
 
 params = {
     "allDailyStockPrices": ("2023-11-24",), 
